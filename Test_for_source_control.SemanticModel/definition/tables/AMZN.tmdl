@@ -1,0 +1,74 @@
+table AMZN
+	lineageTag: 027ca217-6c6e-4dfd-97e3-eb0f54c17119
+
+	column Date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 80bcd733-6030-484e-a2b6-070639004619
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 452109cf-7592-4a7a-8295-e9be6e2ebef5
+			defaultHierarchy: LocalDateTable_14e81939-8a04-413a-a318-6b2d9804eed9.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Open
+		dataType: int64
+		formatString: 0
+		lineageTag: a241e5e4-9bad-4e91-b243-dd2b728f753b
+		summarizeBy: sum
+		sourceColumn: Open
+
+		annotation SummarizationSetBy = Automatic
+
+	column High
+		dataType: int64
+		formatString: 0
+		lineageTag: 63f31757-2b96-4f7a-8aa8-ccd7d00250a5
+		summarizeBy: sum
+		sourceColumn: High
+
+		annotation SummarizationSetBy = Automatic
+
+	column Low
+		dataType: int64
+		formatString: 0
+		lineageTag: 11a5e645-8143-4750-94f1-9012677662af
+		summarizeBy: sum
+		sourceColumn: Low
+
+		annotation SummarizationSetBy = Automatic
+
+	column Close
+		dataType: int64
+		formatString: 0
+		lineageTag: 5b7f7b65-a71a-450e-9ca1-1d51867af71d
+		summarizeBy: sum
+		sourceColumn: Close
+
+		annotation SummarizationSetBy = Automatic
+
+	column Volume
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ee986ca-d31c-4333-96fc-db6553f5e062
+		summarizeBy: sum
+		sourceColumn: Volume
+
+		annotation SummarizationSetBy = Automatic
+
+	partition AMZN = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\PBIBroTraining-1\AMZN.csv"),[Delimiter=",", Columns=6, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Date", type datetime}, {"Open", Int64.Type}, {"High", Int64.Type}, {"Low", Int64.Type}, {"Close", Int64.Type}, {"Volume", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
